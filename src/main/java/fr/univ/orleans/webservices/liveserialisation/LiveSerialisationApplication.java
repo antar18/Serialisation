@@ -19,9 +19,11 @@ public class LiveSerialisationApplication {
     CommandLineRunner initialisation(Services services) {
         return args -> {
             Utilisateur fred = new Utilisateur("fred","fred", false);
+            Message post = new Message(null,"hello world !",fred);
             services.saveUtilisateur(fred);
+            services.saveMessage(post);
+
             services.saveUtilisateur(new Utilisateur("admin","admin", true));
-            services.saveMessage(new Message(null,"hello world !",fred));
         };
     }
 }

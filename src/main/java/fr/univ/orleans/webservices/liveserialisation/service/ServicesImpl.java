@@ -33,6 +33,7 @@ public class ServicesImpl implements Services {
             message.setId(counter.getAndIncrement());
         }
         messages.put(message.getId(), message);
+        message.getUtilisateur().addMessage(message);
         return message;
     }
 

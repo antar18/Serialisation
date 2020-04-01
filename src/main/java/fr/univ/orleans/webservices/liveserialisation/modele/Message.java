@@ -5,11 +5,14 @@ public class Message {
     private String texte;
     private Utilisateur utilisateur;
 
+    public Message() {
+        id = null; texte = null; utilisateur = null;
+    }
     public Message(Long id, String texte, Utilisateur utilisateur) {
         this.id = id;
         this.texte = texte;
         this.utilisateur = utilisateur;
-        this.utilisateur.addMessage(this);
+        //this.utilisateur.addMessage(this);
     }
 
     public Long getId() {

@@ -1,6 +1,7 @@
 package fr.univ.orleans.webservices.liveserialisation.controller;
 
 import fr.univ.orleans.webservices.liveserialisation.modele.Message;
+import fr.univ.orleans.webservices.liveserialisation.modele.Utilisateur;
 import fr.univ.orleans.webservices.liveserialisation.service.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,9 @@ public class ChatController {
 
     @PostMapping("/utilisateurs/{idUser}/messages")
     public ResponseEntity<Message> create(@PathVariable String idUser, @RequestBody Message message) {
-        // il n'a pas d'id, juste un texte
+        Utilisateur utilisateur = services.findUtilisateurById(idUser)
+                .orElseThrow(()->new RuntimeException("Utilisateur non trouvé"));
+        message.setUtilisateur(utilisateur);
         Message messageRec = services.saveMessage(message);
 
         URI location = ServletUriComponentsBuilder
