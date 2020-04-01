@@ -29,12 +29,11 @@ public class ServicesImpl implements Services {
 
     @Override
     public Message saveMessage(Message message) {
-        Message copy = message;
         if (message.getId()==null) {
-            copy = new Message(counter.getAndIncrement(), message.getTexte(),message.getUtilisateur());
+            message.setId(counter.getAndIncrement());
         }
-        messages.put(copy.getId(), copy);
-        return copy;
+        messages.put(message.getId(), message);
+        return message;
     }
 
     @Override

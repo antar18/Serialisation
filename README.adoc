@@ -1,0 +1,8 @@
+= Live démo Sérialisation JSON
+
+Code source de la démo sur la sérialisation en JSON
+des objets dans un controleur REST en Spring MVC.
+
+== Annotations Jackson
+
+Tour d'horizon des solutions proposées par Jackson

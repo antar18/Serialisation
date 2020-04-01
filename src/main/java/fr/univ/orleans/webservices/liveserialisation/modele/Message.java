@@ -1,8 +1,8 @@
 package fr.univ.orleans.webservices.liveserialisation.modele;
 
 public class Message {
-    private final Long id;
-    private final String texte;
+    private Long id;
+    private String texte;
     private Utilisateur utilisateur;
 
     public Message(Long id, String texte, Utilisateur utilisateur) {
@@ -16,8 +16,16 @@ public class Message {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getTexte() {
         return texte;
+    }
+
+    public void setTexte(String texte) {
+        this.texte = texte;
     }
 
     public Utilisateur getUtilisateur() {
