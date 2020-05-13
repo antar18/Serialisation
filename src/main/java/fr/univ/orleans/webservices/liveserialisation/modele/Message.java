@@ -1,9 +1,18 @@
 package fr.univ.orleans.webservices.liveserialisation.modele;
 
+
+import com.fasterxml.jackson.annotation.JsonView;
+
 public class Message {
+    @JsonView(Views.Id.class)
     private Long id;
+    @JsonView(Views.MessageComplet.class)
     private String texte;
+    @JsonView(Views.MessageComplet.class)
     private Utilisateur utilisateur;
+
+    public Message(){}
+
 
     public Message(Long id, String texte, Utilisateur utilisateur) {
         this.id = id;
