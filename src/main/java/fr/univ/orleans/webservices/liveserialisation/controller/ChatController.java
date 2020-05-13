@@ -1,29 +1,32 @@
 package fr.univ.orleans.webservices.liveserialisation.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
+import fr.univ.orleans.webservices.liveserialisation.dto.MessageDTO;
+import fr.univ.orleans.webservices.liveserialisation.dto.UtilisateurDTO;
 import fr.univ.orleans.webservices.liveserialisation.modele.Message;
 import fr.univ.orleans.webservices.liveserialisation.modele.Utilisateur;
-import fr.univ.orleans.webservices.liveserialisation.modele.Views;
 import fr.univ.orleans.webservices.liveserialisation.service.Services;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.security.Principal;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class ChatController {
     @Autowired
     private Services services;
 
+    @Autowired
+    private ModelMapper mapper;
+
     @PostMapping("/utilisateurs/{idUser}/messages")
-    @JsonView(Views.MessageComplet.class)
-    public ResponseEntity<Message> create(@PathVariable String idUser, @RequestBody Message message) {
+    public ResponseEntity<MessageDTO> create(@PathVariable String idUser, @RequestBody MessageDTO messageDTO) {
+        Message message = mapper.map(messageDTO,Message.class);
         Utilisateur utilisateur = services.findUtilisateurById(idUser)
                 .orElseThrow(()->new RuntimeException("Utilisateur non trouvé"));
         message.setUtilisateur(utilisateur);
@@ -32,21 +35,25 @@ public class ChatController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")
                 .buildAndExpand(messageRec.getId()).toUri();
-
-        return ResponseEntity.created(location).body(messageRec);
+        MessageDTO messageRecDTO = mapper.map(messageRec,MessageDTO.class);
+        return ResponseEntity.created(location).body(messageRecDTO);
     }
 
     @GetMapping("/utilisateurs/{idUser}/messages")
-    @JsonView(Views.MessageComplet.class)
-    public ResponseEntity<Collection<Message>>  getAll(@PathVariable String idUser) {
-        return ResponseEntity.ok().body(services.findUtilisateurById(idUser).get().getMessages());
+    public ResponseEntity<Collection<MessageDTO>>  getAll(@PathVariable String idUser) {
+
+        final List<Message> messages = services.findUtilisateurById(idUser).get().getMessages();
+        final List<MessageDTO> messagesDTO = messages.stream()
+                .map(message -> mapper.map(message,MessageDTO.class))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(messagesDTO);
     }
     @GetMapping("/utilisateurs/{idUser}")
-    @JsonView(Views.UtilisateurComplet.class)
-    public ResponseEntity<Utilisateur>  getUtilisateurById(@PathVariable("idUser") String idUser) {
-        Optional<Utilisateur> optionalUtilisateur = services.findUtilisateurById(idUser);
-        return optionalUtilisateur.map(utilisateur -> ResponseEntity.ok().body(utilisateur))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<UtilisateurDTO>  getUtilisateurById(@PathVariable("idUser") String idUser) {
+       final Utilisateur utilisateur  = services.findUtilisateurById(idUser).get();
+       final UtilisateurDTO utilisateurDTO  = mapper.map(utilisateur, UtilisateurDTO.class);
+       return ResponseEntity.ok().body(utilisateurDTO);
     }
 
 }

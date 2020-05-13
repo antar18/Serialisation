@@ -3,10 +3,13 @@ package fr.univ.orleans.webservices.liveserialisation;
 import fr.univ.orleans.webservices.liveserialisation.modele.Message;
 import fr.univ.orleans.webservices.liveserialisation.modele.Utilisateur;
 import fr.univ.orleans.webservices.liveserialisation.service.Services;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import javax.management.modelmbean.ModelMBean;
 
 @SpringBootApplication
 public class LiveSerialisationApplication {
@@ -26,4 +29,15 @@ public class LiveSerialisationApplication {
             services.saveUtilisateur(new Utilisateur("admin","admin", true));
         };
     }
+
+
+
+    @Bean
+    public ModelMapper modelMapper(){
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper;
+    }
+
+
+
 }
